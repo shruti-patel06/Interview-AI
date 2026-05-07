@@ -19,10 +19,10 @@ If you are developing a production application, we recommend using TypeScript wi
 
 4 layers architecture
 
-[+]UI - component,pages
+[+]UI - component,pages (User Interface)
 
-[+]Hook-hooks
+[+]Hook-hooks (for managing state and api layers)
 
-[+]State-auth.comtext.jsx, ai.content.jsx
+[+]State-auth.comtext.jsx, ai.content.jsx (data store)
 
-[+]API-services-auth.api.js
+[+]API-services-auth.api.js (for communication with backend)
