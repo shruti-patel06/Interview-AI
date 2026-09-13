@@ -1,0 +1,369 @@
+.interview-page {
+  min-height: 100vh;
+  padding: 2rem;
+  background: radial-gradient(circle at 50% 0%, #202832 0%, #0e1216 58%);
+  color: #f4f6fb;
+  font-size: 16px;
+}
+
+.report-shell {
+  width: min(100%, 1440px);
+  margin: 0 auto;
+  overflow: hidden;
+  border: 1px solid #2c333d;
+  border-radius: 14px;
+  background: #11161b;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}
+
+.report-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 2rem 2.25rem;
+  border-bottom: 1px solid #2c333d;
+}
+
+.eyebrow,
+.nav-label {
+  color: #ff1458;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.report-header h1 {
+  margin: 0.45rem 0 0.3rem;
+  font-size: clamp(1.35rem, 2.5vw, 2.1rem);
+}
+.report-header p {
+  color: #b4becb;
+  font-size: 0.95rem;
+}
+
+.match-score {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  color: #ff1458;
+  white-space: nowrap;
+}
+.match-score strong {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+.match-score span {
+  color: #c2cad5;
+  font-size: 0.9rem;
+}
+
+.report-layout {
+  display: grid;
+  grid-template-columns: 210px minmax(0, 1fr) 250px;
+  min-height: 800px;
+}
+
+.report-nav,
+.skill-panel {
+  padding: 2rem 1.25rem;
+  background: #151a20;
+}
+.report-nav {
+  border-right: 1px solid #2c333d;
+}
+.nav-label {
+  display: block;
+  margin-bottom: 1.5rem;
+  color: #aeb8c5;
+}
+.report-nav button {
+  display: block;
+  width: 100%;
+  margin: 0.75rem 0;
+  padding: 0.7rem 0.8rem;
+  border-left: 2px solid transparent;
+  border-top: 0;
+  border-right: 0;
+  border-bottom: 0;
+  background: transparent;
+  color: #b4becb;
+  cursor: pointer;
+  font-size: 0.95rem;
+  text-align: left;
+}
+.report-nav button:hover,
+.report-nav button.active {
+  border-left-color: #ff1458;
+  color: #f4f6fb;
+  background: rgba(255, 20, 88, 0.07);
+}
+
+.report-main {
+  min-width: 0;
+  padding: 2rem;
+}
+.report-section + .report-section {
+  margin-top: 3rem;
+}
+.section-title {
+  display: flex;
+  gap: 0.8rem;
+  align-items: flex-start;
+  margin-bottom: 1.25rem;
+}
+.section-title > span {
+  color: #ff1458;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.section-title h2 {
+  font-size: 1.3rem;
+}
+.section-title p {
+  margin-top: 0.3rem;
+  color: #aeb8c5;
+  font-size: 0.88rem;
+}
+
+.question-list {
+  display: grid;
+  gap: 0.9rem;
+}
+.question-card,
+.roadmap-card {
+  padding: 1.1rem;
+  border: 1px solid #2c333d;
+  border-radius: 8px;
+  background: #171c22;
+}
+.question-card {
+  position: relative;
+  padding: 0;
+}
+.question-card summary {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-height: 2rem;
+  padding: 1.1rem;
+  cursor: pointer;
+  list-style: none;
+}
+.question-card summary::-webkit-details-marker {
+  display: none;
+}
+.question-number {
+  flex-shrink: 0;
+  padding: 0.2rem 0.35rem;
+  border-radius: 3px;
+  background: rgba(255, 20, 88, 0.12);
+  color: #ff1458;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.question-card h3 {
+  flex: 1;
+  font-size: 1rem;
+  line-height: 1.45;
+}
+.chevron {
+  color: #c2cad5;
+  font-size: 1.3rem;
+  transition: transform 0.2s ease;
+}
+.question-card[open] .chevron {
+  transform: rotate(180deg);
+}
+.question-details {
+  padding: 0 1.1rem 1.1rem;
+  border-top: 1px solid #2c333d;
+}
+.intention {
+  padding-top: 0.9rem;
+  color: #b4becb;
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+.intention b,
+.answer b {
+  color: #cbd1da;
+}
+.answer {
+  margin-top: 0.9rem;
+  padding: 0.75rem;
+  border-left: 2px solid #ff1458;
+  background: #20252d;
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+.answer p {
+  margin-top: 0.3rem;
+  color: #d1d8e2;
+}
+
+.skill-panel {
+  border-left: 1px solid #2c333d;
+}
+.aside-heading {
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid #2c333d;
+}
+.aside-heading h2 {
+  margin-top: 0.55rem;
+  font-size: 1.3rem;
+}
+.skill-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin-top: 1.5rem;
+}
+.skill-pill {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 0.65rem;
+  border: 1px solid #626b78;
+  border-radius: 7px;
+  color: #e0e5ec;
+  font-size: 0.86rem;
+  line-height: 1.35;
+}
+.skill-pill small {
+  flex-shrink: 0;
+  color: #ff1458;
+  font-size: 0.75rem;
+  text-transform: capitalize;
+}
+.score-note {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid #2c333d;
+  color: #b4becb;
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+.score-note span {
+  color: #ff1458;
+  font-weight: 700;
+}
+
+.roadmap-list {
+  position: relative;
+  display: grid;
+  gap: 0;
+  padding: 0.25rem 0 0.25rem 3.1rem;
+}
+.roadmap-list::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0.85rem;
+  width: 2px;
+  background: #ff1458;
+}
+.roadmap-card {
+  position: relative;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.roadmap-dot {
+  position: absolute;
+  top: 1.25rem;
+  left: -2.55rem;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid #ff1458;
+  border-radius: 50%;
+  background: #11161b;
+  box-shadow: 0 0 0 4px #11161b;
+}
+.roadmap-card > span {
+  color: #ff1458;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+.roadmap-card h3 {
+  margin: 0.55rem 0 0.8rem;
+  color: #f4f6fb;
+  font-size: 1rem;
+  line-height: 1.35;
+}
+.roadmap-card li {
+  margin: 0.45rem 0 0 1rem;
+  color: #c2cad5;
+  font-size: 0.86rem;
+  line-height: 1.35;
+}
+
+@media (max-width: 980px) {
+  .report-layout {
+    grid-template-columns: 170px minmax(0, 1fr);
+  }
+  .skill-panel {
+    grid-column: 1 / -1;
+    border-top: 1px solid #2c333d;
+    border-left: 0;
+  }
+  .skill-list {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .skill-pill {
+    flex: 1 1 220px;
+  }
+  .score-note {
+    margin-top: 1.25rem;
+  }
+}
+
+@media (max-width: 680px) {
+  .interview-page {
+    padding: 1rem;
+  }
+  .report-header {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 1.5rem;
+  }
+  .report-layout {
+    display: block;
+  }
+  .report-nav {
+    display: flex;
+    gap: 0.35rem;
+    overflow-x: auto;
+    padding: 0.75rem;
+    border-right: 0;
+    border-bottom: 1px solid #2c333d;
+  }
+  .nav-label {
+    display: none;
+  }
+  .report-nav button {
+    margin: 0;
+    white-space: nowrap;
+  }
+  .report-main {
+    padding: 1.25rem;
+  }
+  .roadmap-list {
+    padding-left: 2.5rem;
+  }
+  .roadmap-list::before {
+    left: 0.55rem;
+  }
+  .roadmap-dot {
+    left: -2.35rem;
+  }
+  .skill-panel {
+    padding: 1.25rem;
+  }
+}

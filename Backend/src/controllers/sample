@@ -1,0 +1,86 @@
+{
+    "message": "Interview report generated successfully",
+    "report": {
+        "jobDescription": "### Job Description – Software Developer / Full-Stack Developer\n\n* Develop and maintain **web applications and RESTful APIs** using JavaScript, Node.js, Express.js, and React.\n* Design and manage databases using **MongoDB and MySQL**.\n* Implement **secure authentication, authorization, and backend services**.\n* Work with **AWS cloud services** and support application deployment and CI/CD pipelines.\n* Integrate **AI-based features** into applications where required.\n* Debug, test, and optimize applications to ensure **performance, scalability, and reliability**.\n* Collaborate with team members using **Git and GitHub** to develop and deliver software solutions.\n",
+        "resume": "SHRUTI PATEL\nVisakhapatnam, Andhra Pradesh, India-530026\n(+91)8523076969 E-mail| Linkedin | Github| CodeChef| Leetcode\nEducation\nVignan’s Institute of Engineering for Women \tSep 2023 – April 2027(expected)\nBachelor of Technology in Information Technology Visakhapatnam, Andhra Pradesh\nExperience\nBrainOvision Solutions Pvt. Ltd.| AWS Cloud Internship Program \tFeb 2025 – June2025\n• Gained practical experience with AWS EC2, S3, IAM, and cloud deployment concepts. [Link]\n• Worked on mini-projects involving resource provisioning and cloud-based application deployment.\nGirlScript Summer of Code (GSSoC) | Open Source Contributor \tMay 2026 – Present\n• Contributing to open-source projects by working on feature enhancements and identifying bugs. [Link]\n• Successfully merged 4 pull requests through GitHub collaboration in various projects.\nProjects\nAutomated CI/CD Pipeline on AWS | CodePipeline, GitHub integration, EC2, IAM, SSM \tGithub\n• Designed and implemented a CI/CD pipeline using AWS CodePipeline integrated with GitHub for automated deployments to an EC2\ninstance.\n• Configured IAM roles, AWS Systems Manager (SSM) permissions, and tag-based deployment for secure, flexible instance\ntargeting.\n• Diagnosed and resolved IAM/SSM permission issues encountered during pipeline execution.\nVault Ledger | Node.js, Express.js, MongoDB, Mongoose, JWT, bcryptjs, Nodemailer \tGithub\n• Building a banking backend system with JWT-based authentication, password hashing, and secure session handling.\n• Implementing core financial logic including account creation, transaction processing, and ledger tracking for auditing and\nconsistency.\n• Designing scalable APIs with features like idempotent transactions, pending states, and balance calculation using MongoDB\naggregation.\nInterview AI | React.js, Node.js, Express.js, MongoDB, Gemini AI \tGithub\n• Developing a full-stack web application for resume analysis and interview preparation.\n• Implemented user authentication and resume upload functionality using JWT and MongoDB.\n• Integrated Gemini AI to generate interview questions and identify skill gaps from resumes and job descriptions.\nTechnical Skills\n➢ Languages: Java, C, Python, JavaScript\n➢ Frontend Technologies: HTML5, CSS3, React\n➢ Core: Data Structures & Algorithms (Java), Object-Oriented Programming (OOP), DBMS, OS\n➢ Databases: MySQL, MongoDB\n➢ Tools & Platforms: Git, GitHub, Postman, AWS\n➢ Technologies/Frameworks: Node.js, Express, RESTful APIs\nCertifications\nNPTEL – Problem solving through Programming in C, Programming in Java\nInfosys Spring Board – Introduction to Data Science\nAICTE- Java Full Stack with React JS and AI\nCo-curricular Activities\n• Designed and developed the AlgoZenith Club website as UI/UX Lead; delivered a guest lecture to 200+ students and managed tech\noperations for a 70+ team ideathon.\n• Served as Student Coordinator at TechNova Club, organizing technical quizzes, tech talks and sessions.\n\n-- 1 of 1 --\n\n",
+        "selfDescription": "I am an Information Technology student with a strong interest in **software development, cloud computing, and AI-based applications**. I have hands-on experience with technologies such as **Java, JavaScript, React, Node.js, MongoDB, and AWS**. Through my projects, I have worked on **CI/CD automation, secure backend systems, REST APIs, and AI-powered applications**. I enjoy solving problems, learning new technologies, and building practical solutions that can address real-world challenges.\n",
+        "matchScore": 92,
+        "technicalQuestions": [
+            {
+                "question": "How do you ensure idempotency in your transaction processing logic when using Node.js and MongoDB?",
+                "intention": "To test the candidate's understanding of building reliable financial systems and handling distributed state.",
+                "answer": "I use unique request identifiers for each transaction stored in the database. Before processing, the system checks if the identifier exists; if it does, it returns the previous result instead of creating a duplicate."
+            },
+            {
+                "question": "Explain the role of IAM roles vs users in AWS and how you managed permissions for your CI/CD pipeline.",
+                "intention": "To evaluate practical knowledge of AWS security and cloud infrastructure management.",
+                "answer": "IAM users are for long-term credentials, while roles are temporary and best for services like EC2. In my pipeline, I assigned an IAM role to the EC2 instance to allow CodePipeline/SSM to access resources securely without hardcoding credentials."
+            },
+            {
+                "question": "How do you handle performance optimization when querying large datasets in MongoDB?",
+                "intention": "To assess database proficiency and awareness of indexing and aggregation efficiency.",
+                "answer": "I focus on creating appropriate indexes based on query patterns, using projection to retrieve only necessary fields, and leveraging MongoDB aggregation pipelines for efficient data processing on the server side."
+            }
+        ],
+        "behavioralQuestions": [
+            {
+                "question": "Can you describe a time you faced a technical roadblock in a project and how you resolved it?",
+                "intention": "To understand the candidate's problem-solving process and perseverance.",
+                "answer": "During my CI/CD project, I encountered consistent IAM permission failures. I methodically debugged by checking SSM logs, testing individual permission sets, and cross-referencing AWS documentation until I identified the missing tag-based access policies."
+            },
+            {
+                "question": "How do you manage your workflow when collaborating on open-source projects via GitHub?",
+                "intention": "To assess team collaboration and version control skills.",
+                "answer": "I follow standard Git flow: creating descriptive branches, committing modular changes, requesting code reviews, and addressing feedback from project maintainers before merging."
+            }
+        ],
+        "skillGaps": [
+            {
+                "skill": "Advanced Database Schema Design (ACID compliance at scale)",
+                "severity": "medium"
+            },
+            {
+                "skill": "Automated Testing Frameworks (Jest/Cypress)",
+                "severity": "medium"
+            }
+        ],
+        "preparationPlan": [
+            {
+                "day": 1,
+                "focus": "Advanced Backend & Database Optimization",
+                "tasks": [
+                    "Review MongoDB indexing strategies",
+                    "Deep dive into JWT security best practices",
+                    "Practice implementing transaction atomicity"
+                ],
+                "_id": "6aa2c968baaa50aec4cc2360"
+            },
+            {
+                "day": 2,
+                "focus": "AWS & Cloud Security",
+                "tasks": [
+                    "Study AWS IAM policy structure in depth",
+                    "Refresh knowledge on CI/CD lifecycle management",
+                    "Document your specific CI/CD architecture flow"
+                ],
+                "_id": "6aa2c968baaa50aec4cc2361"
+            },
+            {
+                "day": 3,
+                "focus": "Full-Stack System Design",
+                "tasks": [
+                    "Review RESTful API design principles",
+                    "Prepare a walkthrough of the 'Interview AI' architecture",
+                    "Practice mock behavioral interview questions"
+                ],
+                "_id": "6aa2c968baaa50aec4cc2362"
+            }
+        ],
+        "user": "6aa2c6ea772238100c46ceb3",
+        "title": "Full-Stack Developer Interview Preparation Report - Shruti Patel",
+        "_id": "6aa2c968baaa50aec4cc235f",
+        "createdAt": "2026-09-10T15:14:48.874Z",
+        "updatedAt": "2026-09-10T15:14:48.874Z",
+        "__v": 0
+    }
+}
