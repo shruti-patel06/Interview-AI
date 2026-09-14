@@ -43,6 +43,26 @@
   font-size: 0.95rem;
 }
 
+.back-button {
+  margin-top: 1rem;
+  padding: 0.65rem 1rem;
+  border: 1px solid #ff1458;
+  border-radius: 6px;
+  background: transparent;
+  color: #ff1458;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.back-button:hover {
+  background: rgba(255, 20, 88, 0.12);
+}
+.back-button:focus-visible {
+  outline: 2px solid #f4f6fb;
+  outline-offset: 3px;
+}
+
 .match-score {
   display: flex;
   align-items: baseline;
@@ -71,6 +91,8 @@
   background: #151a20;
 }
 .report-nav {
+  display: flex;
+  flex-direction: column;
   border-right: 1px solid #2c333d;
 }
 .nav-label {
@@ -98,6 +120,16 @@
   border-left-color: #ff1458;
   color: #f4f6fb;
   background: rgba(255, 20, 88, 0.07);
+}
+.report-nav .download-resume-button {
+  display: flex;
+  align-items: center;
+  justify-content:center;
+  margin-top: auto;
+  border: 0;
+  padding-left: 0.65rem;
+  white-space: nowrap;
+  text-align:left;
 }
 
 .report-main {
@@ -338,6 +370,7 @@
   }
   .report-nav {
     display: flex;
+    flex-direction: row;
     gap: 0.35rem;
     overflow-x: auto;
     padding: 0.75rem;
@@ -350,6 +383,10 @@
   .report-nav button {
     margin: 0;
     white-space: nowrap;
+  }
+  .report-nav .download-resume-button {
+    width: auto;
+    flex: 0 0 auto;
   }
   .report-main {
     padding: 1.25rem;

@@ -7,7 +7,7 @@ const {
   selfDescription,
   jobDescription,
 } = require("./src/services/temp");
-const generateInterviewReport = require("./src/services/ai.service");
+const { generateInterviewReport } = require("./src/services/ai.service");
 
 async function startServices() {
   if (process.env.MONGO_URI) {
