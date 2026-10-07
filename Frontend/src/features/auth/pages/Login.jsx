@@ -1,26 +1,42 @@
-import React,{ useState } from 'react'
-import { useNavigate,Link } from 'react-router';
+import { useState } from 'react'
+import { useNavigate,Link,Navigate } from 'react-router';
 import "../auth.form.scss";
 import { useAuth } from "../hooks/useAuth"
+import { getErrorMessage } from "../../../lib/api.js"
 
 const Login = () => {
 
-    const { loading,handleLogin } = useAuth()
+    const { user,loading,handleLogin } = useAuth()
     const navigate = useNavigate()
-    
-    //Two-way Binding 
+
+    //Two-way Binding
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [error, setError] = useState("")
+    const [submitting, setSubmitting] = useState(false)
 
     //Prevents reload on submission of form
     const handleSubmit = async(e)=> {
         e.preventDefault();
-        await handleLogin({ email,password });
-        navigate("/")
+        setError("")
+        setSubmitting(true)
+        try {
+            await handleLogin({ email,password });
+            navigate("/")
+        } catch (err) {
+            setError(await getErrorMessage(err, "Login failed. Please try again."))
+        } finally {
+            setSubmitting(false)
+        }
     }
 
     if(loading){
         return(<main><h1>Loading...</h1></main>)
+    }
+
+    //Already logged in users don't need the login page
+    if(user){
+        return <Navigate to={'/'} replace/>
     }
 
     return (
@@ -31,22 +47,28 @@ const Login = () => {
 
                         <div className="input-group">
                             <label htmlFor="email">Email</label>
-                            <input 
+                            <input
+                                value={email}
                                 onChange={(e)=>{setEmail(e.target.value)}}
-                                type="email" id="email" name='email' placeholder='Enter email address' />
+                                type="email" id="email" name='email' placeholder='Enter email address' required />
                         </div>
 
 
                         <div className="input-group">
                             <label htmlFor="password">Password</label>
                             <input
+                                value={password}
                                 onChange={(e)=>{setPassword(e.target.value)}}
-                                type="password" id="password" name='password' placeholder='Enter password' />
+                                type="password" id="password" name='password' placeholder='Enter password' required />
                         </div>
 
-                        <button className='button primary-button'>Login</button>
+                        {error && <p className="form-error" role="alert">{error}</p>}
+
+                        <button className='button primary-button' disabled={submitting}>
+                            {submitting ? "Logging in..." : "Login"}
+                        </button>
                     </form>
-                    <p>Don't have an Account <Link to={"/Register"}>Register</Link></p>
+                    <p>Don't have an Account <Link to={"/register"}>Register</Link></p>
                 </div>
 
             </main>

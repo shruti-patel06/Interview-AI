@@ -271,3 +271,59 @@ textarea:focus {
     width: 100%;
   }
 }
+
+.error-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding: 0.8rem;
+  border: 1px solid #6e2436;
+  border-radius: 6px;
+  background: #3d1420;
+  color: #f9dce3;
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+.error-message > span {
+  color: $accent;
+  font-weight: 700;
+}
+
+.home-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 2rem;
+  border-bottom: 1px solid $border-color;
+  font-size: 0.8rem;
+
+  .brand {
+    color: $accent;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .user-menu {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    color: #aab1bd;
+  }
+
+  .logout-button {
+    padding: 0.4rem 0.8rem;
+    border: 1px solid $accent;
+    border-radius: 6px;
+    background: transparent;
+    color: $accent;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 700;
+
+    &:hover {
+      background: rgba(255, 20, 88, 0.12);
+    }
+  }
+}

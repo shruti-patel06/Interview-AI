@@ -14,6 +14,10 @@ async function startServer() {
     console.warn("MONGO_URI is missing. Database connection skipped.");
   }
 
+  if (!process.env.GOOGLE_GENAI_API_KEY) {
+    console.warn("GOOGLE_GENAI_API_KEY is missing. AI report and resume generation will fail.");
+  }
+
   const port = process.env.PORT || 3000;
   app.listen(port, "0.0.0.0", () => {
     console.log(`Server is running on port ${port}`);

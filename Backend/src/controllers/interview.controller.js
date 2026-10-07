@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const { PDFParse } = require("pdf-parse");
 const {
   generateInterviewReport,
@@ -5,34 +6,68 @@ const {
 } = require("../services/ai.service");
 const interviewReportModel = require("../models/interviewReport.model");
 
+const MAX_JOB_DESCRIPTION_LENGTH = 5000;
+
+async function extractResumeText(file) {
+  const parser = new PDFParse({ data: file.buffer });
+  try {
+    const result = await parser.getText();
+    return result.text;
+  } finally {
+    await parser.destroy();
+  }
+}
+
 /**
  * @description Controller to generate interview report based on user self description,resume and job description
  */
 
 async function generateInterviewReportController(req, res) {
+  const jobDescription = req.body?.jobDescription?.trim();
+  const selfDescription = req.body?.selfDescription?.trim() || "";
+
+  if (!jobDescription) {
+    return res.status(400).json({ message: "Job description is required" });
+  }
+  if (jobDescription.length > MAX_JOB_DESCRIPTION_LENGTH) {
+    return res.status(400).json({
+      message: `Job description must be at most ${MAX_JOB_DESCRIPTION_LENGTH} characters`,
+    });
+  }
+  if (!req.file && !selfDescription) {
+    return res.status(400).json({
+      message: "Either a resume PDF or a self description is required",
+    });
+  }
+
+  let resume = "";
+  if (req.file) {
+    try {
+      resume = (await extractResumeText(req.file)).trim();
+    } catch (error) {
+      console.error("Failed to read resume PDF:", error);
+      return res.status(400).json({
+        message: "Could not read the resume PDF. Please upload a valid PDF file.",
+      });
+    }
+    if (!resume && !selfDescription) {
+      return res.status(400).json({
+        message:
+          "No text could be extracted from the resume PDF. Upload a text-based PDF or add a self description.",
+      });
+    }
+  }
+
   try {
-    if (!req.file) {
-      return res.status(400).json({ message: "Resume PDF is required" });
-    }
-
-    const { selfDescription, jobDescription } = req.body;
-    if (!jobDescription) {
-      return res.status(400).json({ message: "Job description is required" });
-    }
-
-    const parser = new PDFParse({ data: req.file.buffer });
-    const resumeResult = await parser.getText();
-    await parser.destroy();
-
     const interviewReportByAI = await generateInterviewReport({
-      resume: resumeResult.text,
+      resume,
       selfDescription,
       jobDescription,
     });
 
     const interviewReport = await interviewReportModel.create({
       user: req.user.id,
-      resume: resumeResult.text,
+      resume,
       selfDescription,
       jobDescription,
       ...interviewReportByAI,
@@ -56,6 +91,12 @@ async function generateInterviewReportController(req, res) {
 
 async function getInterviewReportByIdController(req, res) {
   const { interviewId } = req.params;
+
+  if (!mongoose.isValidObjectId(interviewId)) {
+    return res.status(404).json({
+      message: "Interview report not found.",
+    });
+  }
 
   const interviewReport = await interviewReportModel.findOne({
     _id: interviewId,
@@ -97,6 +138,12 @@ async function getAllInterviewReports(req, res) {
 async function generateResumePdfController(req, res) {
   const { interviewReportId } = req.params;
 
+  if (!mongoose.isValidObjectId(interviewReportId)) {
+    return res.status(404).json({
+      message: "Interview report not found.",
+    });
+  }
+
   const interviewReport = await interviewReportModel.findOne({
     _id: interviewReportId,
     user: req.user.id,
@@ -110,11 +157,17 @@ async function generateResumePdfController(req, res) {
 
   const { resume, jobDescription, selfDescription } = interviewReport;
 
-  const pdfBuffer = await generateResumePdf({
-    resume,
-    jobDescription,
-    selfDescription,
-  });
+  let pdfBuffer;
+  try {
+    pdfBuffer = await generateResumePdf({
+      resume,
+      jobDescription,
+      selfDescription,
+    });
+  } catch (error) {
+    console.error("Failed to generate resume PDF:", error);
+    return res.status(500).json({ message: "Failed to generate resume PDF" });
+  }
 
   res.set({
     "Content-Type": "application/pdf",

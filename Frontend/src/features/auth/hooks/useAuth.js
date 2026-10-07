@@ -1,63 +1,37 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { AuthContext } from "../auth.context";
-import { login, register, logout, getme } from "../services/auth.api.js";
+import { login, register, logout } from "../services/auth.api.js";
 
+/**
+ * Auth actions throw on failure so the calling page can show the error message.
+ */
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  const { user, setUser, loading, setloading } = context;
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  const { user, setUser, loading } = context;
 
   const handleLogin = async ({ email, password }) => {
-    setloading(true);
-
-    try {
-      const data = await login({ email, password });
-
-      //user comes from the response returned in the auth.controllers from Bck
-      setUser(data.user);
-    } catch (err) {
-    } finally {
-      setloading(false);
-    }
+    const data = await login({ email, password });
+    //user comes from the response returned in the auth.controllers from Backend
+    setUser(data.user);
+    return data.user;
   };
 
   const handleRegister = async ({ username, email, password }) => {
-    setloading(true);
-    try {
-      const data = await register({ username, email, password });
-
-      setUser(data.user);
-    } catch (err) {
-    } finally {
-      setloading(false);
-    }
+    const data = await register({ username, email, password });
+    setUser(data.user);
+    return data.user;
   };
 
   const handleLogout = async () => {
-    setloading(true);
     try {
-      const data = await logout();
-
-      setUser(null); //Frontend se user ka data null hojayega
-    } catch (err) {
+      await logout();
     } finally {
-      setloading(false);
+      setUser(null); //Frontend se user ka data null hojayega, even if the request fails
     }
   };
-
-  //After home page refresh it prevents rolling back to login page
-  useEffect(() => {
-    const getAndSetUser = async () => {
-      // Jab tak token rahega, tab tak backend se user ka current data maang sakte hai
-      try {
-        const data = await getme();
-        setUser(data.user);
-      } catch (err) {
-      } finally {
-        setloading(false);
-      }
-    };
-    getAndSetUser();
-  }, []);
 
   return { user, loading, handleRegister, handleLogin, handleLogout };
 };

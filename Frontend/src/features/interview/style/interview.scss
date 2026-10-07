@@ -55,6 +55,11 @@
   font-size: 0.85rem;
   font-weight: 700;
 }
+.header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
 .back-button:hover {
   background: rgba(255, 20, 88, 0.12);
 }
@@ -130,6 +135,16 @@
   padding-left: 0.65rem;
   white-space: nowrap;
   text-align:left;
+}
+.report-nav .download-error {
+  margin-top: auto;
+  margin-bottom: 0.5rem;
+  color: #ff8a8c;
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+.report-nav .download-error + .download-resume-button {
+  margin-top: 0;
 }
 
 .report-main {

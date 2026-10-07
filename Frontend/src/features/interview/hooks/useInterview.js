@@ -2,106 +2,65 @@ import {
   getAllInterviewReports,
   generateInterviewReport,
   getInterviewReportById,
-  generateResumePdf
+  generateResumePdf,
 } from "../services/interview.api";
-import { useCallback, useContext,useEffect } from "react";
+import { useCallback, useContext } from "react";
 import { InterviewContext } from "../interview.context.jsx";
-import { useParams } from "react-router";
 
+/**
+ * Interview actions. They throw on failure so the calling page can show the error,
+ * and they don't fetch anything on their own — each page decides what to load.
+ */
 export const useInterview = () => {
   const context = useContext(InterviewContext);
-  const {interviewId}=useParams()
-  if(!context){
+  if (!context) {
     throw new Error("useInterview must be used within an InterviewProvider");
   }
-  const { loading, setLoading, report, setReport, reports, setReports } =
-    context;
-  const generateReport = async ({
-    jobDescription,
-    selfDescription,
-    resumeFile,
-  }) => {
-    setLoading(true);
-    let response = null;
-    try {
-      response = await generateInterviewReport({
+  const { reports, setReports } = context;
+
+  const generateReport = useCallback(
+    async ({ jobDescription, selfDescription, resumeFile }) => {
+      const data = await generateInterviewReport({
         jobDescription,
         selfDescription,
         resumeFile,
       });
-      setReport(response.report);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-    return response?.report;
-  };
-
-  const getReportById = useCallback(
-    async (interviewId) => {
-      setLoading(true);
-      let response = null;
-      try {
-        response = await getInterviewReportById(interviewId);
-        setReport(response.interviewReport);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-      return response?.interviewReport;
+      return data.report;
     },
-    [setLoading, setReport],
+    [],
   );
 
-  const getReports = async () => {
-    setLoading(true);
-    let response = null;
-    try {
-      response = await getAllInterviewReports();
-      setReports(response.interviewReports);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-    return response?.interviewReports;
-  };
+  const getReportById = useCallback(async (interviewId) => {
+    const data = await getInterviewReportById(interviewId);
+    return data.interviewReport;
+  }, []);
 
-  const getResumePdf = async (interviewReportId) => {
-        setLoading(true)
-        let response = null
-        try {
-            response = await generateResumePdf({ interviewReportId })
-            const url = window.URL.createObjectURL(new Blob([ response ], { type: "application/pdf" }))
-            const link = document.createElement("a")
-            link.href = url
-            link.setAttribute("download", `resume_${interviewReportId}.pdf`)
-            document.body.appendChild(link)
-            link.click()
-        }
-        catch (error) {
-            console.log(error)
-        } finally {
-            setLoading(false)
-        }
-    }
-  useEffect(()=>{
-    if(interviewId){
-      getReportById(interviewId)
-    }else{
-      getReports()
-    }
-  },[interviewId])
+  const getReports = useCallback(async () => {
+    const data = await getAllInterviewReports();
+    setReports(data.interviewReports);
+    return data.interviewReports;
+  }, [setReports]);
+
+  const getResumePdf = useCallback(async (interviewReportId) => {
+    const pdf = await generateResumePdf({ interviewReportId });
+    const url = window.URL.createObjectURL(
+      new Blob([pdf], { type: "application/pdf" }),
+    );
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `resume_${interviewReportId}.pdf`);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    // Give the browser time to start the download before freeing the blob
+    setTimeout(() => window.URL.revokeObjectURL(url), 1000);
+  }, []);
 
   return {
-    loading,
-    report,
     reports,
     generateReport,
     getReportById,
     getReports,
-    getResumePdf
+    getResumePdf,
   };
 };

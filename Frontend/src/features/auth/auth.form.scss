@@ -34,6 +34,14 @@ main{
         a{
             color:#f63b3e;
             text-decoration:none;
-            
+
+        }
+        .form-error{
+            padding:0.65rem 0.9rem;
+            border:1px solid #f63b3e;
+            border-radius:0.75rem;
+            background:rgba(246, 59, 62, 0.1);
+            color:#ff8a8c;
+            font-size:0.9rem;
         }
 }

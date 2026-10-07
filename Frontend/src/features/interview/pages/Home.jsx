@@ -1,33 +1,94 @@
-import { useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import "../style/home.scss";
 import { useInterview } from "../hooks/useInterview";
 import { useNavigate } from "react-router";
+import { getErrorMessage } from "../../../lib/api.js";
+import { useAuth } from "../../auth/hooks/useAuth.js";
+
+// Must match the limits enforced by the backend
+const MAX_JOB_DESCRIPTION_LENGTH = 5000;
+const MAX_RESUME_SIZE_MB = 3;
+
 const Home = () => {
-  const { loading, reports, generateReport } = useInterview();
+  const { reports, generateReport, getReports } = useInterview();
+  const { user, handleLogout } = useAuth();
   const [jobDescription, setJobDescription] = useState("");
   const [selfDescription, setSelfDescription] = useState("");
-  const [resumeName, setResumeName] = useState("");
-  const resumeInputRef = useRef(null);
+  const [resumeFile, setResumeFile] = useState(null);
+  const [generating, setGenerating] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
-  const handleGenerateReport = async () => {
-    const resumeFile = resumeInputRef.current?.files[0];
-    const data = await generateReport({
-      jobDescription,
-      selfDescription,
-      resumeFile,
+
+  useEffect(() => {
+    getReports().catch(async (err) => {
+      setError(
+        await getErrorMessage(err, "Could not load your recent interview plans."),
+      );
     });
-    navigate(`/interview/${data._id}`);
+  }, [getReports]);
+
+  const handleResumeChange = (event) => {
+    const file = event.target.files[0] ?? null;
+    if (file && file.size > MAX_RESUME_SIZE_MB * 1024 * 1024) {
+      setError(`Resume must be ${MAX_RESUME_SIZE_MB} MB or smaller.`);
+      setResumeFile(null);
+      event.target.value = "";
+      return;
+    }
+    setError("");
+    setResumeFile(file);
   };
-  if (loading) {
+
+  const handleGenerateReport = async () => {
+    setError("");
+    if (!jobDescription.trim()) {
+      setError("Please paste the job description you are preparing for.");
+      return;
+    }
+    if (!resumeFile && !selfDescription.trim()) {
+      setError("Upload your resume or write a short self-description.");
+      return;
+    }
+
+    setGenerating(true);
+    try {
+      const report = await generateReport({
+        jobDescription,
+        selfDescription,
+        resumeFile,
+      });
+      navigate(`/interview/${report._id}`);
+    } catch (err) {
+      setError(
+        await getErrorMessage(
+          err,
+          "Failed to generate your interview plan. Please try again.",
+        ),
+      );
+    } finally {
+      setGenerating(false);
+    }
+  };
+
+  if (generating) {
     return (
       <main className="loading-screen">
-        <h1>Loading your Interrview Plan...</h1>
+        <h1>Generating your Interview Plan...</h1>
       </main>
     );
   }
   return (
     <main className="home">
       <section className="interview-panel" aria-labelledby="interview-title">
+        <header className="home-header">
+          <span className="brand">Hire Ready</span>
+          <div className="user-menu">
+            <span>{user?.username}</span>
+            <button className="logout-button" type="button" onClick={handleLogout}>
+              Log out
+            </button>
+          </div>
+        </header>
         <div className="interview-content">
           <div className="left">
             <div className="section-heading">
@@ -40,6 +101,8 @@ const Home = () => {
               <span className="required-badge">Required</span>
             </div>
             <textarea
+              value={jobDescription}
+              maxLength={MAX_JOB_DESCRIPTION_LENGTH}
               onChange={(e) => {
                 setJobDescription(e.target.value);
               }}
@@ -50,7 +113,7 @@ const Home = () => {
               }
             ></textarea>
             <span className="character-count">
-              {jobDescription.length} / 5000 chars
+              {jobDescription.length} / {MAX_JOB_DESCRIPTION_LENGTH} chars
             </span>
           </div>
 
@@ -73,26 +136,21 @@ const Home = () => {
                   &#8593;
                 </span>
                 <strong>
-                  {resumeName
-                    ? "Resume uploaded"
-                    : "Click to upload or drag & drop"}
+                  {resumeFile ? "Resume uploaded" : "Click to upload"}
                 </strong>
                 <small>
-                  {resumeName
-                    ? `Selected file: ${resumeName}`
-                    : "PDF or DOCX (Max 5MB)"}
+                  {resumeFile
+                    ? `Selected file: ${resumeFile.name}`
+                    : `PDF only (Max ${MAX_RESUME_SIZE_MB}MB)`}
                 </small>
               </label>
               <input
-                ref={resumeInputRef}
-                onChange={(event) =>
-                  setResumeName(event.target.files[0]?.name ?? "")
-                }
+                onChange={handleResumeChange}
                 hidden
                 type="file"
                 name="resume"
                 id="resume"
-                accept=".pdf,.docx"
+                accept=".pdf,application/pdf"
               />
             </div>
 
@@ -105,6 +163,7 @@ const Home = () => {
                 Quick Self-Description
               </label>
               <textarea
+                value={selfDescription}
                 onChange={(e) => setSelfDescription(e.target.value)}
                 name="selfDescription"
                 id="selfDescription"
@@ -119,6 +178,13 @@ const Home = () => {
                 personalized plan.
               </p>
             </div>
+
+            {error && (
+              <div className="error-message" role="alert">
+                <span aria-hidden="true">!</span>
+                <p>{error}</p>
+              </div>
+            )}
           </div>
         </div>
 
