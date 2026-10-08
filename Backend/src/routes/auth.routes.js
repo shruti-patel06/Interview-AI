@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const authController = require("../controllers/auth.controller");
 const authMiddleware = require("../middlewares/auth.middleware")
+const { authLimiter } = require("../middlewares/rateLimit.middleware")
 const authRouter = Router()
 
 //JsDoc Comments
@@ -9,14 +10,14 @@ const authRouter = Router()
  * @description Register a new user
  * @access public
  */
-authRouter.post("/register",authController.registerUserController);
+authRouter.post("/register",authLimiter,authController.registerUserController);
 
 /**
  * @route POST /api/auth/login
  * @description Login user with email and password
  * @access public
  */
-authRouter.post("/login",authController.loginUserController);
+authRouter.post("/login",authLimiter,authController.loginUserController);
 
 
 /**

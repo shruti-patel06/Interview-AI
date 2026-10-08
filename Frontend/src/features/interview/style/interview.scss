@@ -63,6 +63,24 @@
 .back-button:hover {
   background: rgba(255, 20, 88, 0.12);
 }
+.delete-button {
+  border-color: #6e7682;
+  color: #b4becb;
+}
+.delete-button:hover:not(:disabled) {
+  border-color: #ff8a8c;
+  background: rgba(255, 138, 140, 0.1);
+  color: #ff8a8c;
+}
+.delete-button:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+.report-header .delete-error {
+  margin-top: 0.75rem;
+  color: #ff8a8c;
+  font-size: 0.85rem;
+}
 .back-button:focus-visible {
   outline: 2px solid #f4f6fb;
   outline-offset: 3px;

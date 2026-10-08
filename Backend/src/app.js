@@ -4,6 +4,12 @@ const cors = require("cors");
 const { notFound, errorHandler } = require("./middlewares/error.middleware");
 
 const app = express();
+
+// Render sits behind a proxy; trust it so req.ip (used by the rate limiter) is the real client IP
+if (process.env.NODE_ENV === "production") {
+  app.set("trust proxy", 1);
+}
+
 // Browsers send the Origin without a trailing slash, so strip one from the env value
 const allowedOrigin = (process.env.FRONTEND_URL || "http://localhost:5173").replace(/\/+$/, "");
 

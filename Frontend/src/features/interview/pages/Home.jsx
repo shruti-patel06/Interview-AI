@@ -10,13 +10,14 @@ const MAX_JOB_DESCRIPTION_LENGTH = 5000;
 const MAX_RESUME_SIZE_MB = 3;
 
 const Home = () => {
-  const { reports, generateReport, getReports } = useInterview();
+  const { reports, generateReport, getReports, deleteReport } = useInterview();
   const { user, handleLogout } = useAuth();
   const [jobDescription, setJobDescription] = useState("");
   const [selfDescription, setSelfDescription] = useState("");
   const [resumeFile, setResumeFile] = useState(null);
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState("");
+  const [deletingId, setDeletingId] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,6 +38,25 @@ const Home = () => {
     }
     setError("");
     setResumeFile(file);
+  };
+
+  const handleDeleteReport = async (event, report) => {
+    event.stopPropagation(); // don't open the report the button sits on
+    const title = report.title || "this interview plan";
+    if (!window.confirm(`Delete "${title}"? This cannot be undone.`)) {
+      return;
+    }
+    setError("");
+    setDeletingId(report._id);
+    try {
+      await deleteReport(report._id);
+    } catch (err) {
+      setError(
+        await getErrorMessage(err, "Failed to delete the interview plan."),
+      );
+    } finally {
+      setDeletingId(null);
+    }
   };
 
   const handleGenerateReport = async () => {
@@ -213,6 +233,16 @@ const Home = () => {
                     className="report-item"
                     onClick={() => navigate(`/interview/${report._id}`)}
                   >
+                    <button
+                      className="delete-report-button"
+                      type="button"
+                      disabled={deletingId === report._id}
+                      onClick={(event) => handleDeleteReport(event, report)}
+                      aria-label={`Delete ${report.title || "interview plan"}`}
+                      title="Delete"
+                    >
+                      {deletingId === report._id ? "…" : "✕"}
+                    </button>
                     <h3>{report.title || "Untitled Position"}</h3>
                     <p className="report-meta">
                       Generated on{" "}

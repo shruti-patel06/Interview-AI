@@ -115,6 +115,35 @@ async function getInterviewReportByIdController(req, res) {
 }
 
 /**
+ * @description Controller to delete an interview report of the logged in user.
+ */
+
+async function deleteInterviewReportController(req, res) {
+  const { interviewId } = req.params;
+
+  if (!mongoose.isValidObjectId(interviewId)) {
+    return res.status(404).json({
+      message: "Interview report not found.",
+    });
+  }
+
+  // Filtering by user as well means nobody can delete another user's report
+  const interviewReport = await interviewReportModel.findOneAndDelete({
+    _id: interviewId,
+    user: req.user.id,
+  });
+
+  if (!interviewReport) {
+    return res.status(404).json({
+      message: "Interview report not found.",
+    });
+  }
+  res.status(200).json({
+    message: "Interview report deleted successfully.",
+  });
+}
+
+/**
  * @description Controller to get all interview reports of logged in user.
  */
 
@@ -180,6 +209,7 @@ async function generateResumePdfController(req, res) {
 module.exports = {
   generateInterviewReportController,
   getInterviewReportByIdController,
+  deleteInterviewReportController,
   getAllInterviewReports,
   generateResumePdfController,
 };

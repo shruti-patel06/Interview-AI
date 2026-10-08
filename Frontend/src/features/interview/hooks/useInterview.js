@@ -3,6 +3,7 @@ import {
   generateInterviewReport,
   getInterviewReportById,
   generateResumePdf,
+  deleteInterviewReport,
 } from "../services/interview.api";
 import { useCallback, useContext } from "react";
 import { InterviewContext } from "../interview.context.jsx";
@@ -41,6 +42,17 @@ export const useInterview = () => {
     return data.interviewReports;
   }, [setReports]);
 
+  const deleteReport = useCallback(
+    async (interviewId) => {
+      await deleteInterviewReport(interviewId);
+      // Drop it from the cached list so Home updates without a refetch
+      setReports((current) =>
+        current.filter((report) => report._id !== interviewId),
+      );
+    },
+    [setReports],
+  );
+
   const getResumePdf = useCallback(async (interviewReportId) => {
     const pdf = await generateResumePdf({ interviewReportId });
     const url = window.URL.createObjectURL(
@@ -61,6 +73,7 @@ export const useInterview = () => {
     generateReport,
     getReportById,
     getReports,
+    deleteReport,
     getResumePdf,
   };
 };

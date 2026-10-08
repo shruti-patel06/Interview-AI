@@ -220,6 +220,34 @@ textarea:focus {
       gap: 0.5rem;
       cursor: pointer;
       flex-shrink: 0;
+      position: relative;
+
+      h3 {
+        padding-right: 1.75rem; // room for the delete button
+      }
+
+      .delete-report-button {
+        position: absolute;
+        top: 0.6rem;
+        right: 0.6rem;
+        width: 1.6rem;
+        height: 1.6rem;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        background: transparent;
+        color: #7b8490;
+        cursor: pointer;
+        font-size: 0.8rem;
+
+        &:hover:not(:disabled) {
+          border-color: $accent;
+          color: $accent;
+        }
+
+        &:disabled {
+          cursor: wait;
+        }
+      }
 
       .match-score {
         font-size: 0.8rem;

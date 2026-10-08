@@ -2,6 +2,10 @@ const express = require("express");
 const authMiddleware = require("../middlewares/auth.middleware");
 const interviewController = require("../controllers/interview.controller");
 const upload = require("../middlewares/file.middleware");
+const {
+  generateReportLimiter,
+  resumePdfLimiter,
+} = require("../middlewares/rateLimit.middleware");
 const interviewRouter = express.Router();
 
 /**
@@ -13,6 +17,7 @@ const interviewRouter = express.Router();
 interviewRouter.post(
   "/",
   authMiddleware.authUser,
+  generateReportLimiter,
   upload.single("resume"),
   interviewController.generateInterviewReportController,
 );
@@ -27,6 +32,18 @@ interviewRouter.get(
   "/report/:interviewId",
   authMiddleware.authUser,
   interviewController.getInterviewReportByIdController,
+);
+
+/**
+ * @route DELETE /api/interview/report/:interviewId
+ * @description delete an interview report of the logged in user.
+ * @access private
+ */
+
+interviewRouter.delete(
+  "/report/:interviewId",
+  authMiddleware.authUser,
+  interviewController.deleteInterviewReportController,
 );
 
 /**
@@ -45,8 +62,11 @@ interviewRouter.get(
  * @description generate resume pdf on the basis of user self description, resume content and job description.
  * @access private
  */
-interviewRouter.post("/resume/pdf/:interviewReportId", authMiddleware.authUser, interviewController.generateResumePdfController)
-
-
+interviewRouter.post(
+  "/resume/pdf/:interviewReportId",
+  authMiddleware.authUser,
+  resumePdfLimiter,
+  interviewController.generateResumePdfController,
+);
 
 module.exports = interviewRouter;

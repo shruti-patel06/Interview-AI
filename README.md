@@ -60,9 +60,20 @@ All `/api/interview` routes require the auth cookie.
 | POST | `/api/interview/` | Generate a report — multipart: `jobDescription` (≤ 5000 chars), `resume` (PDF ≤ 3 MB) and/or `selfDescription` |
 | GET | `/api/interview/` | List your reports |
 | GET | `/api/interview/report/:id` | Get one report |
+| DELETE | `/api/interview/report/:id` | Delete one of your reports |
 | POST | `/api/interview/resume/pdf/:id` | Generate a tailored resume PDF |
 
 Errors are always returned as JSON: `{ "message": "..." }`.
+
+### Rate limits
+
+| Routes | Limit | Counted per |
+| --- | --- | --- |
+| `POST /api/auth/login`, `POST /api/auth/register` (shared) | 20 per 15 minutes | IP address |
+| `POST /api/interview/` | 10 per hour | user |
+| `POST /api/interview/resume/pdf/:id` | 10 per hour | user |
+
+Over the limit the API responds `429` with a `message`, plus a standard `RateLimit` header. Counters live in memory, so they reset when the server restarts. The values are in `Backend/src/middlewares/rateLimit.middleware.js`.
 
 ## Deployment notes
 

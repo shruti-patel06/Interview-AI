@@ -12,8 +12,10 @@ const Interview = () => {
   const [result, setResult] = useState(null);
   const [downloading, setDownloading] = useState(false);
   const [downloadError, setDownloadError] = useState("");
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
   const { interviewId } = useParams();
-  const { getReportById, getResumePdf } = useInterview();
+  const { getReportById, getResumePdf, deleteReport } = useInterview();
   const { user, handleLogout } = useAuth();
   const navigate = useNavigate();
 
@@ -39,6 +41,8 @@ const Interview = () => {
     };
   }, [getReportById, interviewId]);
 
+  const current = result?.interviewId === interviewId ? result : null;
+
   const handleDownloadResume = async () => {
     setDownloadError("");
     setDownloading(true);
@@ -53,7 +57,23 @@ const Interview = () => {
     }
   };
 
-  const current = result?.interviewId === interviewId ? result : null;
+  const handleDeleteReport = async () => {
+    const title = current.report.title || "this interview plan";
+    if (!window.confirm(`Delete "${title}"? This cannot be undone.`)) {
+      return;
+    }
+    setDeleteError("");
+    setDeleting(true);
+    try {
+      await deleteReport(interviewId);
+      navigate("/");
+    } catch (err) {
+      setDeleteError(
+        await getErrorMessage(err, "Failed to delete this interview plan."),
+      );
+      setDeleting(false);
+    }
+  };
 
   if (current?.error) {
     return (
@@ -99,7 +119,20 @@ const Interview = () => {
               >
                 Log out
               </button>
+              <button
+                className="back-button delete-button"
+                type="button"
+                disabled={deleting}
+                onClick={handleDeleteReport}
+              >
+                {deleting ? "Deleting..." : "Delete report"}
+              </button>
             </div>
+            {deleteError && (
+              <p className="delete-error" role="alert">
+                {deleteError}
+              </p>
+            )}
           </div>
           <div className="match-score">
             <strong>{report.matchScore}</strong>
